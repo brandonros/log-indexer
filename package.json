@@ -1,0 +1,19 @@
+{
+  "name": "log-indexer",
+  "version": "1.0.0",
+  "description": "Stream JSON logs into queryable paths stored in SQLite",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandonros/log-indexer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brandonros/log-indexer/issues"
+  },
+  "homepage": "https://github.com/brandonros/log-indexer#readme"
+}
