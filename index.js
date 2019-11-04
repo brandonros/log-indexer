@@ -7,11 +7,19 @@ const Database = require('better-sqlite3')
 const database = new Database('db.sqlite')
 
 const executeQuery = (sql, bindings) => {
-  console.log({
-    sql,
-    bindings
-  })
   database.prepare(sql).run(bindings)
+}
+
+const createTables = () => {
+  executeQuery(`CREATE TABLE IF NOT EXISTS logs (
+    hash TEXT,
+    line TEXT
+  )`, {})
+  executeQuery(`CREATE TABLE IF NOT EXISTS log_fields (
+    hash TEXT,
+    path TEXT,
+    value TEXT
+  )`, {})
 }
 
 const indexMessage = (message) => {
@@ -53,21 +61,28 @@ const insertMessageIndex = (hash, messageIndex) => {
   }
 }
 
+let lineCounter = 0
+
 const processBatch = (lines) => {
-  lines.forEach(line => {
+  lines.forEach((line, index) => {
     try {
       const message = JSON.parse(line)
       const { messageHash, messageIndex } = indexMessage(message)
       insertMessage(messageHash, line)
       insertMessageIndex(messageHash, messageIndex)
+      lineCounter += 1
+      console.log(lineCounter)
     } catch (err) {
       console.error(`Invalid log line: ${line}`)
+      console.error(err.stack)
     }
   })
 }
 
 const run = () => {
   database.pragma('journal_mode = WAL')
+
+  createTables()
 
   process.stdin
     .pipe(split())
